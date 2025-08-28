@@ -1,3 +1,4 @@
+//
 // Chave usada no localStorage para salvar os dados dos países
 const STORAGE_KEY = "paises::data";
 
