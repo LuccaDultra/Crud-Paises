@@ -8,7 +8,7 @@
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
     h1 { color: #2c3e50; }
-    #buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    #buttons { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; float:left; flex-direction: column; overflow-y: scroll; border-radius: 5px; height: 100%; width: 20% ; color: #fff }
     button { margin: 0; padding: 10px 15px; border: none; border-radius: 5px; background-color: #3498db; color: white; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; }
     button:hover { background-color: #2980b9; }
     #output { margin-top: 20px; }
@@ -29,12 +29,13 @@
 </head>
 <body>
   <h1>🌍 Informações de Países</h1>
-
+  
   <div id="buttons">
     <button data-action="init">Carregar Dados Iniciais</button>
     <button data-action="list">Listar Todos os Países</button>
     <button data-action="findByCapital">Buscar País por Capital</button>
     <button data-action="populationChart">Gráfico de População (Top 10)</button>
+    <button data-action="compareCountris">Comaparar Paises</button>
     <button data-action="clear">Limpar Dados</button>
     <button data-action="exit">Sair</button>
   </div>
