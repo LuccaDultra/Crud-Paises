@@ -35,6 +35,21 @@ function showFindByCapitalForm() {
   });
 }
 
+// --- Formulário para buscar país por nome, para comparar ---
+function showFindByNameForm() {
+  forms.innerHTML = `
+    <h3>Buscar País por Nome</h3>
+    <form id="nameForm">
+      <input type="text" id="countryName" placeholder="Nome do país" required />
+      <button type="submit">Buscar</button>
+    </form>
+  `;
+  document.getElementById('nameForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const nome = document.getElementById('countryName').value;
+    const found = Paises.findCountryByName(countries, nome);
+    forms.innerHTML = '';
+
 // ===== Gráfico de População =====
 function showPopulationChart() {
   forms.innerHTML = `<canvas id="populationChart"></canvas>`;
