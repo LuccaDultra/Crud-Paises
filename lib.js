@@ -39,13 +39,11 @@ const resetCountries = () => {
 // Formata os dados de um único país para exibição em texto
 const formatCountry = country => {
   return `
-ID: ${country.id} (${country.codigo_iso_alpha3})
-País: ${country.nome_comum} (${country.nome_oficial})
+ID: ${country.id} (${country.cca3})
+País: ${country.nome_comum} (${country.oficial_ptBr})
 Capital: ${country.capital}
 População: ${country.populacao.toLocaleString('pt-BR')}
 Área: ${country.area_km2.toLocaleString('pt-BR')} km²
-Idioma: ${country.idioma_principal}
-Moeda: ${country.moeda.nome} (${country.moeda.simbolo})
   `.trim();
 };
 
