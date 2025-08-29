@@ -8,7 +8,9 @@
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
     h1 { color: #2c3e50; }
-    #buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; flex-direction: column;gap: 20px;float:left;heigt:100hv;}
+    #buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; flex-direction: column;gap: 20px;float:left;heigt:100hv;transition: transform 0.3s ease-in-out;transform: translateX(-290px);}
+    #buttons.visible{transform: translateX(0);}
+    .botaoside{background-color: #3498db;}
     button { margin: 0; padding: 10px 15px; border: none; border-radius: 5px; background-color: #3498db; color: white; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; }
     button:hover { background-color: #2980b9; }
     #output { margin-top: 20px; }
@@ -29,7 +31,7 @@
 </head>
 <body>
   <h1>🌍 Informações de Países</h1>
-  
+  <button class="botaoside" onclick="toggleSidebar()">|||</button>
   <div id="buttons">
     <button data-action="init">Carregar Dados Iniciais</button>
     <button data-action="list">Listar Todos os Países</button>
@@ -41,7 +43,12 @@
 
   <div id="forms"></div>
   <div id="output"><p>Clique em uma das opções acima para começar.</p></div>
-
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('buttons');
+      sidebar.classList.toggle('visible');
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="ui.js"></script>
 </body>
