@@ -97,6 +97,7 @@ const actions = {
     output.innerHTML = Paises.listCountriesAsTable(countries);
   },
   findByCapital: () => showFindByCapitalForm(),
+  findByName: () => showFindByNameForm(),
   populationChart: () => showPopulationChart(),
   clear: () => {
     forms.innerHTML = '';
