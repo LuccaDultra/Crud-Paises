@@ -47,7 +47,7 @@ População: ${country.populacao.toLocaleString('pt-BR')}
   `.trim();
 };
 
-// **NOVO**: Gera uma tabela HTML com a lista de países
+// Gera uma tabela HTML com a lista de países
 const listCountriesAsTable = countries => {
   // Cabeçalho da tabela
   const headers = `
@@ -88,7 +88,7 @@ const listCountriesAsTable = countries => {
 
 // Busca um país pelo nome da sua capital
 const findCountryByCapital = (countries, capitalName) =>
-  countries.find(country => country.capital.toLowerCase() === capitalName.toLowerCase());
+  countries.filter(country => country.capital.toLowerCase() === capitalName.toLowerCase())[0];
 
 // ========================
 // Funções para Gráficos
@@ -109,7 +109,7 @@ export const Paises = {
   resetCountries,
   clearCountries,
   formatCountry,
-  listCountriesAsTable, // Nova função exportada
+  listCountriesAsTable, 
   findCountryByCapital,
   getTop10ByPopulation
 };
