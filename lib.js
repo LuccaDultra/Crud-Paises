@@ -125,7 +125,7 @@ const findCountryByCapital = (countries, capitalName) =>
 
 // Busca um país pelo nome
 const findCountryByName = (countries, countryName) =>
-  countries.find(country => country.comum_name.toLowerCase() === countryName.toLowerCase());
+  countries.find(country => country.nome_comum.toLowerCase() === countryName.toLowerCase());
 
 // ========================
 // Funções para Gráficos
