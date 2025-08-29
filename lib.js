@@ -123,6 +123,10 @@ const listCountriesAsTable = countries => {
 const findCountryByCapital = (countries, capitalName) =>
   countries.find(country => country.capital.toLowerCase() === capitalName.toLowerCase());
 
+// Busca um país pelo nome
+const findCountryByName = (countries, countryName) =>
+  countries.find(country => country.comum_name.toLowerCase() === countryName.toLowerCase());
+
 // ========================
 // Funções para Gráficos
 // ========================
@@ -144,5 +148,6 @@ export const Paises = {
   formatCountry,
   listCountriesAsTable, // Nova função exportada
   findCountryByCapital,
+  findCountryByName,
   getTop10ByPopulation
 };
