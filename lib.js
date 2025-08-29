@@ -65,7 +65,7 @@ const listCountriesAsTable = countries => {
   // Linhas da tabela, uma para cada país
   const rows = countries.map(country => `
     <tr>
-      <td><img class="flag" src="https://flagsapi.com/${country.cca2}/flat/32.png" alt="Bandeira de ${country.nome_comum}"></td>
+      <td><img class="flag" src="https://flagcdn.com/40x30/${country.cca2.toLowerCase()}.png" alt="Bandeira de ${country.nome_comum}"></td>
       <td>${country.nome_comum}</td>
       <td>${country.capital}</td>
       <td>${country.populacao.toLocaleString('pt-BR')}</td>
