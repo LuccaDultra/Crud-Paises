@@ -49,6 +49,9 @@ function showFindByNameForm() {
     const nome = document.getElementById('countryName').value;
     const found = Paises.findCountryByName(countries, nome);
     forms.innerHTML = '';
+    output.innerHTML = found ? `<pre>${Paises.formatCountry(found)}</pre>` : 'Nenhum país encontrado com esse nome.';
+  });
+}
 
 // ===== Gráfico de População =====
 function showPopulationChart() {
