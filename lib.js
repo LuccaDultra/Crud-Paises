@@ -1,4 +1,6 @@
 const STORAGE_KEY = "paises::data"; // Chave usada no localStorage para salvar os dados dos países
+const COMPARISON_KEY = "paises::comparison";
+
 
 // ========================
 // Persistência (salvar, carregar, limpar os dados)
@@ -30,20 +32,185 @@ const resetCountries = () => {
   return countries;
 };
 
+
+// ========================
+// Comparação de paises
+// ========================
+
+
+const getComparisonList = () => {
+    return JSON.parse(localStorage.getItem('comparisonList')) || [];
+}
+
+
+const saveComparisonList = (list) => {
+    localStorage.setItem('comparisonList', JSON.stringify(list));
+}
+
+const clearComparison = () => {
+    localStorage.removeItem('comparisonList');
+    
+}
+
+
+
+const addToComparison = (countryCca3, countries) => {
+    const list = getComparisonList();
+    const existe = list.filter(x => x.cca3 === countryCca3)
+    if (list.length >= 3) {
+        alert('Você só pode comparar até 3 países por vez.');
+        return;
+    }
+
+    if(existe.length != 0){
+      alert('Este país já foi selecionado.');
+      return;
+    }
+    const novoPais = countries.filter(pais => pais.cca3 === countryCca3)[0]
+    const novaList = [...list, novoPais];
+    saveComparisonList(novaList);
+    //updateComparisonCart(); // Atualiza a UI
+}
+
+
+
+const displayComparisonView = () => {
+    const listCca3 = getComparisonList();
+    
+    if (listCca3.length < 2) {
+        alert('Selecione pelo menos 2 países para comparar.');
+        return;
+    }
+
+    // Filtra os objetos completos dos países a partir dos códigos cca3
+    const countriesToCompare = getComparisonList();
+
+    // Lógica para encontrar os maiores valores de população e área
+    const maxPop = Math.max(...countriesToCompare.map(c => c.populacao || 0));
+    const maxArea = Math.max(...countriesToCompare.map(c => c.area_km2 || 0));
+
+    // Gera as colunas para cada país
+    const countryColumns = countriesToCompare.map(country => {
+        // Define a classe da célula de população (verde para o maior, vermelho para os outros)
+        const popClass = country.populacao === maxPop ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300';
+        // Define a classe da célula de área
+        const areaClass = country.area_km2 === maxArea ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300';
+
+        return `
+            <div class="bg-slate-800 p-4 rounded-lg shadow-md flex flex-col">
+                <img 
+                    src="https://flagcdn.com/w1280/${country.cca2.toLowerCase()}.jpg" 
+                    alt="Bandeira de ${country.nome_comum}" 
+                    class="w-full max-w-sm mx-auto h-auto rounded-md mb-4 border-2 border-slate-700"
+                >
+                <h3 class="text-xl font-bold text-white text-center mb-2">${country.nome_comum}</h3>
+                <!-- CORRIGIDO: Usando a chave 'oficial_ptBr' -->
+                <p class="text-slate-400 text-center italic mb-4">${country.oficial_ptBr}</p>
+                <div class="space-y-2 mt-auto">
+                    <div class="flex justify-between items-center p-2 bg-slate-700/50 rounded-md">
+                        <span class="font-semibold text-slate-400">Capital:</span>
+                        <span class="text-slate-100">${country.capital}</span>
+                    </div>
+                    <!-- Célula de População com cor condicional -->
+                    <div class="flex justify-between items-center p-2 rounded-md ${popClass} transition-colors">
+                        <span class="font-semibold">População:</span>
+                        <span class="font-bold">${(country.populacao || 0).toLocaleString('pt-BR')}</span>
+                    </div>
+                     <!-- Célula de Área com cor condicional -->
+                    <div class="flex justify-between items-center p-2 rounded-md ${areaClass} transition-colors">
+                        <span class="font-semibold">Área (km²):</span>
+                        <span class="font-bold">${(country.area_km2 || 0).toLocaleString('pt-BR')}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Cria a grade responsiva para exibir as colunas
+    output.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-2 ${countriesToCompare.length === 3 ? 'lg:grid-cols-3' : ''} gap-6">
+          ${countryColumns}
+      </div>
+    `;
+    forms.innerHTML = ''; // Limpa a área de formulários
+    clearComparison(); // Limpa o localStorage e o ícone do carrinho
+}
+
+
+
 // ========================
 // Listagem e formatação
 // ========================
 
 // Formata os dados de um único país para exibição em texto
-const formatCountry = country => {
-  return `
-ID: ${country.id} (${country.cca3})
-País: ${country.nome_comum} (${country.oficial_ptBr})
-Capital: ${country.capital}
-População: ${country.populacao.toLocaleString('pt-BR')}
-Área: ${country.area_km2.toLocaleString('pt-BR')} km²
-  `.trim();
-};
+function displayCountryDetails(country) {
+  output.innerHTML = `
+    <div class="bg-slate-800 p-6 rounded-lg shadow-md transition-opacity duration-500">
+        
+        <!-- BANDEIRA EM ALTA RESOLUÇÃO -->
+        <div class="mb-6">
+            <img 
+              src="https://flagcdn.com/w1280/${country.cca2.toLowerCase()}.jpg" 
+              alt="Bandeira de ${country.nome_comum}" 
+              class="w-full max-w-sm mx-auto border-2 border-slate-700 rounded-lg shadow-lg"
+            >
+        </div>
+        
+        <!-- INFORMAÇÕES DO PAÍS -->
+        <div class="text-center border-b border-slate-700 pb-4 mb-4">
+            <h3 class="text-3xl font-bold text-white">${country.nome_comum}</h3>
+            <p class="text-slate-400 italic mt-1">${country.oficial_ptBr}</p>
+        </div>
+        
+        <div class="space-y-3 text-lg">
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Capital:</span>
+                <span class="text-slate-100">${country.capital}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Região:</span>
+                <span class="text-slate-100">${country.regiao}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Sub-região:</span>
+                <span class="text-slate-100">${country.sub_regiao}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">População:</span>
+                <span class="text-slate-100">${(country.populacao || 0).toLocaleString('pt-BR')}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Área:</span>
+                <span class="text-slate-100">${(country.area_km2 || 0).toLocaleString('pt-BR')} km²</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Idioma Principal:</span>
+                <span class="text-slate-100">${country.idioma_principal}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Moeda Principal:</span>
+                <span class="text-slate-100">${country.moeda_principal}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Abreviação (CCA3):</span>
+                <span class="text-slate-100 font-mono">${country.cca3}</span>
+            </div>
+        </div>
+
+        <!-- BOTÃO DE AÇÃO PARA COMPARAÇÃO -->
+        <div class="border-t border-slate-700 mt-6 pt-6">
+            <button 
+                data-compare-cca3="${country.cca3}"
+                data-action="addCompare"
+                class="w-full bg-indigo-600 text-white font-semibold py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-indigo-500 transition-colors"
+            >
+                Selecionar para Comparar
+            </button>
+        </div>
+
+    </div>
+  `;
+}
 
 // Gera uma tabela HTML com a lista de países
 const listCountriesAsTable = countries => {
@@ -74,7 +241,7 @@ const listCountriesAsTable = countries => {
     </tr>
   `).join('');
 
-  // Retorna a tabela completa e responsiva
+  // Retorna a tabela completa 
   return `
     <div class="overflow-x-auto rounded-lg shadow-md">
       <table class="w-full text-slate-300">
@@ -87,6 +254,13 @@ const listCountriesAsTable = countries => {
   `;
 };
 
+
+
+
+
+
+const findCountryBy = (countries, keyName) => (chave) =>
+  countries.filter(country => country[chave].toLowerCase() == keyName.toLowerCase())[0];
 
 
 
@@ -111,6 +285,14 @@ const getTop10ByPopulation = (countries) => {
     .slice(0, 10);
 };
 
+
+
+
+
+
+
+
+
 // ========================
 // Exporta as funções
 // ========================
@@ -119,9 +301,15 @@ export const Paises = {
   saveCountries,
   resetCountries,
   clearCountries,
-  formatCountry,
+  displayCountryDetails,
   listCountriesAsTable, 
   findCountryByCapital,
+  findCountryBy,
   getTop10ByPopulation,
-  getTop10ByArea
+  getTop10ByArea,
+  getComparisonList,
+  saveComparisonList,
+  clearComparison,
+  addToComparison,
+  displayComparisonView
 };

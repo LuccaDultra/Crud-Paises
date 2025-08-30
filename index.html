@@ -59,6 +59,12 @@
 </head>
 <body class="bg-slate-900 text-slate-200">
 
+    <div id="comparison-cart-container" class="fixed top-6 right-6 z-50">
+    <!-- Este container começa intencionalmente vazio. 
+         O JavaScript é o responsável por criar e inserir o botão do carrinho aqui dentro 
+         APENAS quando for necessário. -->
+    </div>
+
     <div class="flex h-screen">
         <!-- Sidebar -->
         <aside id="sidebar" class="bg-slate-800 text-white p-4 transition-all duration-300 ease-in-out w-20 flex flex-col">
@@ -102,7 +108,7 @@
                     </button>
                     <button data-action="clear" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eraser flex-shrink-0 pointer-events-none"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21H7Z"/><path d="M22 21H7"/><path d="m5 12 5 5"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Limpar Tela</span>
+                        <span class="sidebar-button-text pointer-events-none">Limpar Dados</span>
                     </button>
                     <button data-action="exit" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out flex-shrink-0 pointer-events-none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>

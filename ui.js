@@ -1,7 +1,15 @@
 // Importa o módulo principal que contém as funções de manipulação dos países
 import { Paises } from './lib.js';
 
+
+
+
+
+
+
 // ===== Dados e elementos =====
+
+Paises.clearComparison() // Limpa a comparação
 
 // Carrega os países salvos no localStorage.
 let countries = Paises.loadCountries();
@@ -13,6 +21,16 @@ if (countries.length === 0) {
 const output = document.getElementById('output');
 const forms = document.getElementById('forms');
 const buttons = document.getElementById('buttons');
+const comparisonCartContainer = document.getElementById('comparison-cart-container');
+
+
+
+
+
+
+
+
+
 
 // ===== Forms =====
 
@@ -72,14 +90,14 @@ function showSearchForm() {
     switch (searchType) {
       case 'name':
         // Substitua por sua função real de busca por nome
-        found = Paises.findCountryByName(countries, searchTerm); 
+        found = Paises.findCountryBy(countries, searchTerm)('nome_comum'); 
         break;
       case 'code':
         // Substitua por sua função real de busca por abreviação/código
-        found = Paises.findCountryByCode(countries, searchTerm);
+        found = Paises.findCountryBy(countries, searchTerm)( 'cca3');
         break;
       case 'capital':
-        found = Paises.findCountryByCapital(countries, searchTerm);
+        found = Paises.findCountryBy(countries, searchTerm)('capital');
         break;
     }
     
@@ -88,24 +106,49 @@ function showSearchForm() {
     
     // A lógica para exibir o resultado continua a mesma
     if (found) {
-      output.innerHTML = `
-        <div class="bg-slate-800 p-6 rounded-lg shadow-md">
-          <h3 class="text-lg font-semibold text-white mb-4">Resultado da Busca:</h3>
-          <pre class="bg-slate-900 text-slate-300 p-4 rounded-md overflow-x-auto whitespace-pre-wrap font-mono">${Paises.formatCountry(found)}</pre>
-        </div>
-      `;
+      Paises.displayCountryDetails(found)
+     
     } else {
       output.innerHTML = `
         <div class="bg-slate-800 p-6 rounded-lg shadow-md">
-          <p class="text-center text-yellow-400">Nenhum resultado encontrado para "${searchTerm}".</p>
+          <p class="text-center text-yellow-400">Nenhum resultado encontrado para "${searchTerm}", use os nomes em inglês.</p>
         </div>
       `;
     }
   });
 }
 
-// ===== Gráfico de População =====
-// Esta nova função irá gerar o formulário de seleção do gráfico
+
+// ===== Comparação de Paises =====
+
+
+const updateComparisonCart = () => {
+    const list = Paises.getComparisonList();
+    
+    if (list.length === 0) {
+        comparisonCartContainer.innerHTML = ''; // Se a lista estiver vazia, esconde o ícone
+        return;
+    }
+
+    // Gera o HTML do carrinho com o contador
+    comparisonCartContainer.innerHTML = `
+        <button 
+            id="compare-now-btn" 
+            class="flex items-center gap-x-3 bg-indigo-600 text-white font-bold text-lg py-3 px-6 rounded-lg shadow-lg transition-all duration-200 ease-in-out hover:bg-indigo-700 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75"
+        >
+            <!-- Ícone de balança (aumentado) -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale flex-shrink-0"><path d="m16 16 3-8 3 8c-2 1-4 1-6 0"/><path d="M2 16l3-8 3 8c-2 1-4 1-6 0"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+            
+            <!-- Texto dinâmico -->
+            <span>
+                Comparar (${list.length}) Países
+            </span>
+        </button>
+    `;
+}
+
+
+// ===== Gráficos =====
 function showChartForm() {
   // Limpa a área de output para garantir que não haja gráficos antigos
   output.innerHTML = '';
@@ -210,6 +253,11 @@ function showChartForm() {
   });
 }
 
+
+
+
+
+
 // ===== Listar =====
 // Função que exibe a lista e ativa a interatividade da tabela
 function showCountriesList() {
@@ -234,55 +282,26 @@ function showCountriesList() {
       // (usando o mesmo layout da busca para manter a consistência)
       if (country) {
         forms.innerHTML = ''; // Limpa a área de formulários
-        displayCountryDetails(country); // Chama uma função para mostrar os detalhes
+        Paises.displayCountryDetails(country); // Chama uma função para mostrar os detalhes
       }
     }
   });
 }
 
-// Crie esta função para não repetir código. A busca e o clique na tabela podem usá-la.
-// Função ATUALIZADA para exibir os detalhes do país com os novos dados
-function displayCountryDetails(country) {
-  output.innerHTML = `
-    <div class="bg-slate-800 p-6 rounded-lg shadow-md transition-opacity duration-500">
-        
-        <div class="mb-6">
-            <img 
-              src="https://flagcdn.com/w1280/${country.cca2.toLowerCase()}.jpg" 
-              alt="Bandeira de ${country.nome_comum}" 
-              class="w-full max-w-sm mx-auto border-2 border-slate-700 rounded-lg shadow-lg"
-            >
-        </div>
-        
-        <div class="text-center border-b border-slate-700 pb-4 mb-4">
-            <h3 class="text-3xl font-bold text-white">${country.nome_comum}</h3>
-            <p class="text-slate-400 italic mt-1">${country.oficial_ptBr}</p> </div>
-        
-        <div class="space-y-3 text-lg">
-            <div class="flex justify-between items-center">
-                <span class="font-semibold text-slate-400">Capital:</span>
-                <span class="text-slate-100">${country.capital}</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="font-semibold text-slate-400">Região:</span>
-                <span class="text-slate-100">${country.regiao}</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="font-semibold text-slate-400">Sub-região:</span>
-                <span class="text-slate-100">${country.sub_regiao}</span> </div>
-            <div class="flex justify-between items-center">
-                <span class="font-semibold text-slate-400">Idioma Principal:</span>
-                <span class="text-slate-100">${country.idioma_principal}</span> </div>
-            <div class="flex justify-between items-center">
-                <span class="font-semibold text-slate-400">Moeda Principal:</span>
-                <span class="text-slate-100">${country.moeda_principal}</span> </div>
-            <div class="flex justify-between items-center">
-                <span class="font-semibold text-slate-400">Abreviação:</span>
-                <span class="text-slate-100 font-mono">${country.cca3}</span> </div>
-        </div>
-    </div>
-  `;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ===== Actions =====
 const actions = {
   init: () => {
@@ -290,7 +309,7 @@ const actions = {
     output.innerHTML = "<p>🌍 Dados dos países carregados com sucesso!</p>";
     forms.innerHTML = "";
   },
-  // **ALTERADO**: Agora usa innerHTML para renderizar a tabela
+  
   list: () => showCountriesList(),
   findByCapital: () => showSearchForm(),
   populationChart: () => showChartForm(),
@@ -306,6 +325,17 @@ const actions = {
   }
 };
 
+
+
+
+
+
+
+
+
+
+
+
 // ===== Event listener =====
 buttons.addEventListener('click', e => {
   if (e.target.tagName === 'BUTTON') {
@@ -314,4 +344,25 @@ buttons.addEventListener('click', e => {
       actions[action]();
     }
   }
+});
+
+
+document.addEventListener('click', (e) => {
+    // Captura clique no botão "Selecionar para Comparar" pelo data-action
+    // Usamos 'closest' para garantir que funciona mesmo clicando em um ícone dentro do botão
+    const compareButton = e.target.closest('[data-action="addCompare"]');
+    if (compareButton) {
+        // Agora que temos o elemento botão, podemos pegar seu outro dataset com segurança
+        const cca3 = compareButton.dataset.compareCca3;
+        Paises.addToComparison(cca3, countries)
+        updateComparisonCart()
+        return; // Encerra para não processar outros cliques
+    }
+
+    // Captura clique no botão do "carrinho" para iniciar a comparação
+    const cartButton = e.target.closest('#compare-now-btn');
+    if (cartButton) {
+        Paises.displayComparisonView();
+        updateComparisonCart() 
+    }
 });
