@@ -47,43 +47,48 @@ População: ${country.populacao.toLocaleString('pt-BR')}
 
 // Gera uma tabela HTML com a lista de países
 const listCountriesAsTable = countries => {
-  // Cabeçalho da tabela
+  // Cabeçalho da tabela com classes do Tailwind
   const headers = `
-    <thead>
+    <thead class="bg-slate-700">
       <tr>
-        <th>Bandeira</th>
-        <th>País</th>
-        <th>Capital</th>
-        <th>População</th>
-        <th>Área (km²)</th>
+        <th class="p-3 text-sm font-semibold tracking-wide text-left">Bandeira</th>
+        <th class="p-3 text-sm font-semibold tracking-wide text-left">País</th>
+        <th class="p-3 text-sm font-semibold tracking-wide text-left">Capital</th>
+        <th class="p-3 text-sm font-semibold tracking-wide text-left">População</th>
+        <th class="p-3 text-sm font-semibold tracking-wide text-left">Área (km²)</th>
       </tr>
     </thead>
   `;
 
-  // Linhas da tabela, uma para cada país
-  //adicionar possivelmente com um for a seleção de atributos a serem mostrados
+  // Corpo da tabela
   const rows = countries.map(country => `
-    <tr>
-      <td><img class="flag" src="https://flagcdn.com/40x30/${country.cca2.toLowerCase()}.png" alt="Bandeira de ${country.nome_comum}"></td>
-      <td>${country.nome_comum}</td>
-      <td>${country.capital}</td>
-      <td>${country.populacao.toLocaleString('pt-BR')}</td>
-      <td>${country.area_km2.toLocaleString('pt-BR')}</td>
+    <tr 
+      class="bg-slate-800 border-b border-slate-700 hover:bg-slate-600 cursor-pointer transition-colors"
+      data-country-code="${country.cca2}"
+    >
+      <td class="p-3"><img class="w-10 h-auto rounded-sm" src="https://flagcdn.com/w40/${country.cca2.toLowerCase()}.jpg" alt="Bandeira de ${country.nome_comum}"></td>
+      <td class="p-3 font-bold text-white">${country.nome_comum}</td>
+      <td class="p-3">${country.capital}</td>
+      <td class="p-3">${country.populacao.toLocaleString('pt-BR')}</td>
+      <td class="p-3">${country.area_km2.toLocaleString('pt-BR')}</td>
     </tr>
   `).join('');
 
-  // Retorna a tabela completa
+  // Retorna a tabela completa e responsiva
   return `
-    <div class="table-container">
-      <table>
+    <div class="overflow-x-auto rounded-lg shadow-md">
+      <table class="w-full text-slate-300">
         ${headers}
-        <tbody>
+        <tbody class="divide-y divide-slate-700">
           ${rows}
         </tbody>
       </table>
     </div>
   `;
 };
+
+
+
 
 // Busca um país pelo nome da sua capital
 const findCountryByCapital = (countries, capitalName) =>

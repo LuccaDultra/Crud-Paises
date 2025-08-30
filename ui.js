@@ -209,6 +209,80 @@ function showChartForm() {
     });
   });
 }
+
+// ===== Listar =====
+// Função que exibe a lista e ativa a interatividade da tabela
+function showCountriesList() {
+  // 1. Renderiza a tabela na tela
+  output.innerHTML = Paises.listCountriesAsTable(countries);
+
+  // 2. Adiciona o event listener na div 'output'
+  output.addEventListener('click', e => {
+    // Encontra a linha (TR) mais próxima de onde o usuário clicou
+    // que tenha o nosso atributo 'data-country-code'.
+    const row = e.target.closest('tr[data-country-code]');
+
+    // Se o usuário clicou em uma linha válida...
+    if (row) {
+      // Pega o código do país que guardamos no atributo data
+      const countryCode = row.dataset.countryCode;
+      
+      // Encontra o objeto completo do país no seu array de países
+      const country = countries.find(c => c.cca2 === countryCode);
+
+      // Se encontrou o país, exibe os detalhes dele
+      // (usando o mesmo layout da busca para manter a consistência)
+      if (country) {
+        forms.innerHTML = ''; // Limpa a área de formulários
+        displayCountryDetails(country); // Chama uma função para mostrar os detalhes
+      }
+    }
+  });
+}
+
+// Crie esta função para não repetir código. A busca e o clique na tabela podem usá-la.
+// Função ATUALIZADA para exibir os detalhes do país com os novos dados
+function displayCountryDetails(country) {
+  output.innerHTML = `
+    <div class="bg-slate-800 p-6 rounded-lg shadow-md transition-opacity duration-500">
+        
+        <div class="mb-6">
+            <img 
+              src="https://flagcdn.com/w1280/${country.cca2.toLowerCase()}.jpg" 
+              alt="Bandeira de ${country.nome_comum}" 
+              class="w-full max-w-sm mx-auto border-2 border-slate-700 rounded-lg shadow-lg"
+            >
+        </div>
+        
+        <div class="text-center border-b border-slate-700 pb-4 mb-4">
+            <h3 class="text-3xl font-bold text-white">${country.nome_comum}</h3>
+            <p class="text-slate-400 italic mt-1">${country.oficial_ptBr}</p> </div>
+        
+        <div class="space-y-3 text-lg">
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Capital:</span>
+                <span class="text-slate-100">${country.capital}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Região:</span>
+                <span class="text-slate-100">${country.regiao}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Sub-região:</span>
+                <span class="text-slate-100">${country.sub_regiao}</span> </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Idioma Principal:</span>
+                <span class="text-slate-100">${country.idioma_principal}</span> </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Moeda Principal:</span>
+                <span class="text-slate-100">${country.moeda_principal}</span> </div>
+            <div class="flex justify-between items-center">
+                <span class="font-semibold text-slate-400">Abreviação:</span>
+                <span class="text-slate-100 font-mono">${country.cca3}</span> </div>
+        </div>
+    </div>
+  `;
+}
 // ===== Actions =====
 const actions = {
   init: () => {
@@ -217,10 +291,7 @@ const actions = {
     forms.innerHTML = "";
   },
   // **ALTERADO**: Agora usa innerHTML para renderizar a tabela
-  list: () => {
-    forms.innerHTML = '';
-    output.innerHTML = Paises.listCountriesAsTable(countries);
-  },
+  list: () => showCountriesList(),
   findByCapital: () => showSearchForm(),
   populationChart: () => showChartForm(),
   clear: () => {

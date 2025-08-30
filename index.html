@@ -94,11 +94,11 @@
                     </button>
                      <button data-action="findByCapital" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search flex-shrink-0 pointer-events-none"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Buscar Capital</span>
+                        <span class="sidebar-button-text pointer-events-none">Buscar</span>
                     </button>
                     <button data-action="populationChart" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 flex-shrink-0 pointer-events-none"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Gráfico Pop.</span>
+                        <span class="sidebar-button-text pointer-events-none">Gráfico</span>
                     </button>
                     <button data-action="clear" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eraser flex-shrink-0 pointer-events-none"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21H7Z"/><path d="M22 21H7"/><path d="m5 12 5 5"/></svg>
@@ -116,14 +116,15 @@
         <main class="flex-1 p-6 md:p-8 overflow-y-auto">
             <header class="mb-8">
                 <h1 class="text-3xl font-bold text-white">🌍 Painel de Informações de Países</h1>
-                <p class="text-slate-400 mt-1">Utilize o menu lateral para navegar pelas funcionalidades.</p>
+                <p class="text-slate-400 mt-3">Utilize o menu lateral para navegar pelas funcionalidades.</p>
             </header>
             
             <!-- Área de Formulários Dinâmicos -->
             <div id="forms" class="mb-8"></div>
 
             <!-- Área de Saída de Dados -->
-            <div id="output" class="bg-slate-800 p-6 rounded-lg shadow-md min-h-[200px]">
+            <!-- A classe min-h-[200px] foi removida daqui -->
+            <div id="output" class="bg-slate-800 p-6 rounded-lg shadow-md">
                 <p class="text-slate-400">Bem-vindo! Selecione uma opção no menu para começar.</p>
                 <!-- O conteúdo (tabelas, gráficos, etc.) será inserido aqui -->
             </div>
@@ -171,3 +172,5 @@
 
 </body>
 </html>
+
+
