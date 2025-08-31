@@ -1,20 +1,24 @@
-// Importa o módulo principal que contém as funções de manipulação dos países
 import { Paises } from './lib.js';
 
-// ===== Dados e elementos =====
-
-// Carrega os países salvos no localStorage.
-let countries = Paises.loadCountries();
-if (countries.length === 0) {
-    countries = Paises.resetCountries(); // Carrega os dados iniciais se estiver vazio
-}
-
-// Seleciona elementos HTML
+const splashScreen = document.getElementById('splash-screen');
+const mainContent = document.getElementById('main-content');
 const output = document.getElementById('output');
 const forms = document.getElementById('forms');
 const buttons = document.getElementById('buttons');
 
-// ===== Forms =====
+function initializeApp() {
+    let countries = Paises.loadCountries();
+        if (countries.length === 0) {
+                countries = Paises.resetCountries();
+                    }
+
+    setTimeout(() => {
+        splashScreen.classList.add('fade-out');
+        mainContent.classList.add('visible');
+                   }, 1500);
+        return countries;
+                          }
+ let countries = initializeApp();
 
 // --- Formulário para buscar país por capital ---
 function showFindByCapitalForm() {
@@ -30,8 +34,17 @@ function showFindByCapitalForm() {
     const capital = document.getElementById('capitalName').value;
     const found = Paises.findCountryByCapital(countries, capital);
     forms.innerHTML = '';
-    // A busca individual continua mostrando o formato de texto
-    output.innerHTML = found ? `<pre>${Paises.formatCountry(found)}</pre>` : 'Nenhum país encontrado com essa capital.';
+    if (found) {
+        // Cria a URL da bandeira usando o código do país (cca2)
+            const flagUrl = `https://flagsapi.com/${found.cca2}/flat/64.png`;
+                output.innerHTML = `<div class="country-info">
+                    <img class="imagem" src="${flagUrl}" alt="Bandeira de ${found.nome_comum}" class="flag-output">
+                    <pre>${Paises.formatCountry(found)}</pre>
+                    </div> `;
+      } else {
+          output.innerHTML = 'Nenhum país encontrado com essa capital.';
+      }
+
   });
 }
 

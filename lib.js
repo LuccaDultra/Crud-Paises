@@ -84,7 +84,7 @@ Moeda: ${country.moeda.nome} (${country.moeda.simbolo})
 const listCountriesAsTable = countries => {
   // Cabeçalho da tabela
   const headers = `
-    <thead>
+    <thead >
       <tr>
         <th>Bandeira</th>
         <th>País</th>
