@@ -187,8 +187,6 @@ const displayCountryDetails = (country) => {
 }
 
 
-
-
 // Gera uma tabela HTML com a lista de países
 const listCountriesAsTable = countries => {
   // Cabeçalho da tabela 
@@ -204,6 +202,7 @@ const listCountriesAsTable = countries => {
     </thead>
   `;
 
+  
   // Corpo da tabela
   const rows = countries.map(country => `
     <tr 
@@ -233,7 +232,7 @@ const listCountriesAsTable = countries => {
 
 
 
-// Função de pesquisar que pode ser ultilizada para mais de um fim
+// Função de pesquisar que pode ser ultilizada para mais de um atributo
 const findCountryBy = (countries, keyName) => (chave) =>
   countries.filter(country => country[chave].toLowerCase() == keyName.toLowerCase())[0];
 

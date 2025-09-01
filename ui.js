@@ -26,7 +26,7 @@ const homepageView = document.getElementById('homepage-view');
 const dashboardView = document.getElementById('dashboard-view');
 const enterDashboardBtn = document.getElementById('enter-dashboard-btn');
 
-
+// Alterna entre homepage e dashboard
 enterDashboardBtn.addEventListener('click', () => {
     // Adiciona classes para uma transição suave de fade-out
     homepageView.classList.add('opacity-0', 'transition-opacity', 'duration-500');
@@ -45,6 +45,8 @@ enterDashboardBtn.addEventListener('click', () => {
 
     }, 500);
 });
+
+
 
 const output = document.getElementById('output');
 const forms = document.getElementById('forms');
@@ -107,12 +109,13 @@ const showAddCountryForm = () => {
 
     const nomeComum = document.getElementById('nome_comum').value;
     
-    // Gera abreviações simples baseadas no nome (suficiente para este app)
+    // Gera abreviações simples baseadas no nome 
     const cca3 = nomeComum.slice(0, 3).toUpperCase();
 
     // Validação: Verifica se um país com a mesma abreviação já existe
     if (countries.some(c => c.cca3 === cca3)) {
-      showCustomAlert(`Já existe um país com a abreviação '${cca3}'. Por favor, escolha um nome diferente.`);
+      console.log('Já existe')
+      alert(`Já existe um país com a abreviação '${cca3}'. Por favor, escolha um nome que tenha as 3 primeiras letras diferentes.`);
       return; // Interrompe a execução
     }
 
@@ -122,8 +125,8 @@ const showAddCountryForm = () => {
       populacao: parseInt(document.getElementById('populacao').value, 10),
       area_km2: parseInt(document.getElementById('area_km2').value, 10),
       cca3: cca3,
-      cca2: 'us-al',
       // Preenche outros dados com valores padrão para evitar erros
+      cca2: 'us-al', // Bandeira com um X vermelho, que foi usada do estado do Alabama USA, já que a api permite, e não vai conflitar com nenhum pais 
       oficial_ptBr: `República de ${nomeComum}`,
       regiao: 'N/D',
       sub_regiao: 'N/D',
@@ -138,14 +141,14 @@ const showAddCountryForm = () => {
     // Limpa o formulário e exibe o novo país
     forms.innerHTML = '';
     Paises.displayCountryDetails(newCountry);
-    showCustomAlert('País adicionado com sucesso!');
+    alert('País adicionado com sucesso!');
   });
 }
 
 const showEditForm = (countryToEdit) => {
   output.innerHTML = '';
   
-  // Preenche a div 'forms' com o HTML do formulário
+  // Preenche a div com o formulário
   forms.innerHTML = `
     <div class="bg-slate-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
       <h2 class="text-2xl font-bold text-white mb-6">Editando: ${countryToEdit.nome_comum}</h2>
@@ -192,7 +195,7 @@ const showEditForm = (countryToEdit) => {
   document.getElementById('editForm').addEventListener('submit', e => {
     e.preventDefault();
     
-    // Pega o código do país do atributo do formulário
+    // Pega o código cca3 do país 
     const cca3 = e.target.dataset.cca3;
     
     // Cria um objeto com os dados atualizados do formulário
@@ -534,7 +537,6 @@ const showCountriesList = () => {
   // Adiciona o event listener na div 'output' para analisar clicks
   output.addEventListener('click', e => {
     // Encontra a linha mais próxima de onde o usuário clicou
-    // que tenha o nosso atributo 'data-country-code'.
     const row = e.target.closest('tr[data-country-code]');
 
     // Se linha é válida...
@@ -546,7 +548,7 @@ const showCountriesList = () => {
       const country = countries.find(c => c.cca2 === countryCode);
 
       // Se encontrou o país, exibe os detalhes dele
-      // (Reaproveitando codigo da outra função)
+      // (Reaproveitando codigo da outra função para mostrar o pais)
       if (country) {
         forms.innerHTML = '';
         Paises.displayCountryDetails(country); // Chama a função para mostrar os detalhes
@@ -606,7 +608,7 @@ const actions = {
 // Event listener
 // ========================
 
-// Botões padrões
+// Botões SideBar
 buttons.addEventListener('click', e => {
   if (e.target.tagName === 'BUTTON') {
     const action = e.target.dataset.action;
@@ -616,10 +618,8 @@ buttons.addEventListener('click', e => {
   }
 });
 
-
-
 document.addEventListener('click', (e) => {
-    // Captura clique no botão "Selecionar para Comparar" 
+    // Adicionar a Comparação 
     const compareButton = e.target.closest('[data-action="addCompare"]');
     if (compareButton) {
         const cca3 = compareButton.dataset.compareCca3;
@@ -634,7 +634,7 @@ document.addEventListener('click', (e) => {
         return; 
     }
 
-    
+    // Deletar 
     const deleteButton = e.target.closest('[data-action="deleteCountry"]');
     if (deleteButton) {
         const cca3Cod = deleteButton.dataset.cca3;
@@ -648,7 +648,7 @@ document.addEventListener('click', (e) => {
         return;
     }
 
-    // --- EDITAR ---
+    // Editar
     const editButton = e.target.closest('[data-action="editCountry"]');
     if (editButton) {
         const cca3 = editButton.dataset.cca3;
