@@ -3,21 +3,25 @@ import { Paises } from './lib.js';
 
 
 
+// ========================
+// Ações que não dependem de outra função
+// ========================
 
 
-
-
-// ===== Dados e elementos =====
-
-Paises.clearComparison() // Limpa a comparação
+Paises.clearComparison(); // Limpa a comparação
 
 // Carrega os países salvos no localStorage.
 let countries = Paises.loadCountries();
 if (countries.length === 0) {
     countries = Paises.resetCountries(); // Carrega os dados iniciais se estiver vazio
-}
+};
 
-// Seleciona elementos HTML
+
+// ========================
+// Elementos
+// ========================
+
+
 const output = document.getElementById('output');
 const forms = document.getElementById('forms');
 const buttons = document.getElementById('buttons');
@@ -25,19 +29,15 @@ const comparisonCartContainer = document.getElementById('comparison-cart-contain
 
 
 
+// ========================
+// Forms
+// ========================
 
 
 
+// Formulário para buscar país 
 
-
-
-
-// ===== Forms =====
-
-// --- Formulário para buscar país por capital ---
-// Renomeie a função para algo mais genérico, como showSearchForm
 function showSearchForm() {
-  // O HTML agora inclui a caixa de seleção para o tipo de busca
   forms.innerHTML = `
     <div class="bg-slate-800 p-6 rounded-lg shadow-md max-w-lg mx-auto">
       <h2 class="text-xl font-semibold text-white mb-4">Buscar País</h2>
@@ -76,7 +76,7 @@ function showSearchForm() {
     </div>
   `;
   
-  // O event listener agora é mais inteligente
+  // O event listener para identificar os valores de texto e tipo
   document.getElementById('searchForm').addEventListener('submit', e => {
     e.preventDefault();
     
@@ -89,11 +89,9 @@ function showSearchForm() {
     // Decide qual função de busca chamar com base no tipo selecionado
     switch (searchType) {
       case 'name':
-        // Substitua por sua função real de busca por nome
         found = Paises.findCountryBy(countries, searchTerm)('nome_comum'); 
         break;
       case 'code':
-        // Substitua por sua função real de busca por abreviação/código
         found = Paises.findCountryBy(countries, searchTerm)( 'cca3');
         break;
       case 'capital':
@@ -101,13 +99,10 @@ function showSearchForm() {
         break;
     }
     
-    // Limpa a área de formulários
     forms.innerHTML = '';
-    
-    // A lógica para exibir o resultado continua a mesma
+
     if (found) {
       Paises.displayCountryDetails(found)
-     
     } else {
       output.innerHTML = `
         <div class="bg-slate-800 p-6 rounded-lg shadow-md">
@@ -116,11 +111,13 @@ function showSearchForm() {
       `;
     }
   });
-}
+};
 
 
-// ===== Comparação de Paises =====
 
+// ========================
+// Comparação de Paises
+// ========================
 
 const updateComparisonCart = () => {
     const list = Paises.getComparisonList();
@@ -145,15 +142,81 @@ const updateComparisonCart = () => {
             </span>
         </button>
     `;
+};
+
+
+const displayComparisonView = () => {
+    const listCca3 = Paises.getComparisonList();
+    
+    if (listCca3.length < 2) {
+        alert('Selecione pelo menos 2 países para comparar.');
+        return;
+    }
+
+    // Filtra os objetos completos dos países a partir dos códigos cca3
+    const countriesToCompare = Paises.getComparisonList();
+
+    // Lógica para encontrar os maiores valores de população e área
+    const maxPop = Math.max(...countriesToCompare.map(c => c.populacao || 0));
+    const maxArea = Math.max(...countriesToCompare.map(c => c.area_km2 || 0));
+
+    // Gera as colunas para cada país
+    const countryColumns = countriesToCompare.map(country => {
+        // Define a classe da célula de população (verde para o maior, vermelho para os outros)
+        const popClass = country.populacao === maxPop ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300';
+        // Define a classe da célula de área
+        const areaClass = country.area_km2 === maxArea ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300';
+
+        return `
+            <div class="bg-slate-800 p-4 rounded-lg shadow-md flex flex-col">
+                <img 
+                    src="https://flagcdn.com/w1280/${country.cca2.toLowerCase()}.jpg" 
+                    alt="Bandeira de ${country.nome_comum}" 
+                    class="w-full max-w-sm mx-auto h-auto rounded-md mb-4 border-2 border-slate-700"
+                >
+                <h3 class="text-xl font-bold text-white text-center mb-2">${country.nome_comum}</h3>
+                <p class="text-slate-400 text-center italic mb-4">${country.oficial_ptBr}</p>
+                <div class="space-y-2 mt-auto">
+                    <div class="flex justify-between items-center p-2 bg-slate-700/50 rounded-md">
+                        <span class="font-semibold text-slate-400">Capital:</span>
+                        <span class="text-slate-100">${country.capital}</span>
+                    </div>
+                    <!-- Célula de População com cor condicional -->
+                    <div class="flex justify-between items-center p-2 rounded-md ${popClass} transition-colors">
+                        <span class="font-semibold">População:</span>
+                        <span class="font-bold">${(country.populacao || 0).toLocaleString('pt-BR')}</span>
+                    </div>
+                     <!-- Célula de Área com cor condicional -->
+                    <div class="flex justify-between items-center p-2 rounded-md ${areaClass} transition-colors">
+                        <span class="font-semibold">Área (km²):</span>
+                        <span class="font-bold">${(country.area_km2 || 0).toLocaleString('pt-BR')}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Cria a grade responsiva para exibir as colunas
+    output.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-2 ${countriesToCompare.length === 3 ? 'lg:grid-cols-3' : ''} gap-6">
+          ${countryColumns}
+      </div>
+    `;
+    forms.innerHTML = ''; // Limpa a área de formulários
+    Paises.clearComparison(); // Limpa o localStorage e o ícone do carrinho
 }
 
 
-// ===== Gráficos =====
+// ========================
+// Gráficos
+// ========================
+
+
 function showChartForm() {
-  // Limpa a área de output para garantir que não haja gráficos antigos
+  // Limpa a área de output para garantir que não elementos indesejados
   output.innerHTML = '';
 
-  // Cria o formulário de seleção com o estilo do Tailwind
+  // Cria o formulário de seleção
   forms.innerHTML = `
     <div class="bg-slate-800 p-6 rounded-lg shadow-md max-w-lg mx-auto">
       <h2 class="text-xl font-semibold text-white mb-4">Gerar Gráfico</h2>
@@ -181,7 +244,7 @@ function showChartForm() {
     </div>
   `;
 
-  // Adiciona o event listener para o formulário que acabamos de criar
+  // Adiciona o event listener para o formulário
   document.getElementById('chartForm').addEventListener('submit', e => {
     e.preventDefault();
     
@@ -190,14 +253,13 @@ function showChartForm() {
     
     let top10, chartTitle, datasetLabel;
 
-    // Prepara os dados com base na escolha do usuário
+    // Prepara os dados com base na escolha
     if (chartType === 'population') {
-      top10 = Paises.getTop10ByPopulation(countries);
+      top10 = Paises.getTop10By(countries)('populacao');
       chartTitle = 'Top 10 Países Mais Populosos';
       datasetLabel = 'População';
-    } else { // chartType === 'area'
-      // Aqui usamos a nova função que você adicionou
-      top10 = Paises.getTop10ByArea(countries); 
+    } else { 
+      top10 = Paises.getTop10by(countries)(area_km2); 
       chartTitle = 'Top 10 Maiores Países por Área';
       datasetLabel = 'Área (km²)';
     }
@@ -207,7 +269,7 @@ function showChartForm() {
     const data = top10.map(country => chartType === 'population' ? country.populacao : country.area_km2);
     const colors = labels.map(() => `hsl(${Math.random() * 360}, 70%, 60%)`);
 
-    // Limpa o formulário e prepara a área de output para o gráfico
+    // Limpa o formulário e prepara a área para o gráfico
     forms.innerHTML = '';
     output.innerHTML = `<div class="bg-slate-800 p-6 rounded-lg shadow-md"><canvas id="dynamicChart"></canvas></div>`;
 
@@ -251,58 +313,53 @@ function showChartForm() {
       }
     });
   });
-}
+};
 
 
 
 
 
+// ========================
+// Listar
+// ========================
 
-// ===== Listar =====
-// Função que exibe a lista e ativa a interatividade da tabela
+
+// Função que exibe a lista interativa
 function showCountriesList() {
-  // 1. Renderiza a tabela na tela
+  // Renderiza a tabela na tela
   output.innerHTML = Paises.listCountriesAsTable(countries);
 
-  // 2. Adiciona o event listener na div 'output'
+  // Adiciona o event listener na div 'output' para analisar clicks
   output.addEventListener('click', e => {
-    // Encontra a linha (TR) mais próxima de onde o usuário clicou
+    // Encontra a linha mais próxima de onde o usuário clicou
     // que tenha o nosso atributo 'data-country-code'.
     const row = e.target.closest('tr[data-country-code]');
 
-    // Se o usuário clicou em uma linha válida...
+    // Se linha é válida...
     if (row) {
-      // Pega o código do país que guardamos no atributo data
+      // Pega o código cca3 do país 
       const countryCode = row.dataset.countryCode;
       
-      // Encontra o objeto completo do país no seu array de países
+      // Encontra o pais completo 
       const country = countries.find(c => c.cca2 === countryCode);
 
       // Se encontrou o país, exibe os detalhes dele
-      // (usando o mesmo layout da busca para manter a consistência)
+      // (Reaproveitando codigo da outra função)
       if (country) {
-        forms.innerHTML = ''; // Limpa a área de formulários
-        Paises.displayCountryDetails(country); // Chama uma função para mostrar os detalhes
+        forms.innerHTML = '';
+        Paises.displayCountryDetails(country); // Chama a função para mostrar os detalhes
       }
     }
   });
-}
+};
 
 
 
 
+// ========================
+// Actions
+// ========================
 
-
-
-
-
-
-
-
-
-
-
-// ===== Actions =====
 const actions = {
   init: () => {
     countries = Paises.resetCountries();
@@ -326,17 +383,12 @@ const actions = {
 };
 
 
+// ========================
+// Event listener
+// ========================
 
 
-
-
-
-
-
-
-
-
-// ===== Event listener =====
+// Botões padrões
 buttons.addEventListener('click', e => {
   if (e.target.tagName === 'BUTTON') {
     const action = e.target.dataset.action;
@@ -347,22 +399,21 @@ buttons.addEventListener('click', e => {
 });
 
 
+// EventListener da função comparar
 document.addEventListener('click', (e) => {
-    // Captura clique no botão "Selecionar para Comparar" pelo data-action
-    // Usamos 'closest' para garantir que funciona mesmo clicando em um ícone dentro do botão
+    // Captura clique no botão "Selecionar para Comparar" 
     const compareButton = e.target.closest('[data-action="addCompare"]');
     if (compareButton) {
-        // Agora que temos o elemento botão, podemos pegar seu outro dataset com segurança
         const cca3 = compareButton.dataset.compareCca3;
-        Paises.addToComparison(cca3, countries)
-        updateComparisonCart()
-        return; // Encerra para não processar outros cliques
+        Paises.addToComparison(cca3, countries);
+        updateComparisonCart();
+        return; 
     }
 
     // Captura clique no botão do "carrinho" para iniciar a comparação
     const cartButton = e.target.closest('#compare-now-btn');
     if (cartButton) {
-        Paises.displayComparisonView();
-        updateComparisonCart() 
+        displayComparisonView(); // Mostra comparação
+        updateComparisonCart(); // Limpa o localStorage
     }
 });

@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD Países</title>
 
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Usamos o tailwind como ferramenta para facilitar o CSS -->
+
+    <!-- Também usamos vetores svg para os icones e simbolos do site -->
 
     <style>
-        /* --- CSS Simplificado e Comentado --- */
 
-        /* 1. Configuração da Fonte Padrão */
-        /* Usamos uma lista de fontes padrão que se adaptam a qualquer sistema (Windows, Mac, Linux, etc.). */
-        /* Isso remove a necessidade de carregar fontes externas como o Google Fonts. */
+        /* Configuração da Fonte Padrão */
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
         
-        /* 2. Estilização da Barra de Rolagem */
-        /* Para um visual mais integrado ao tema escuro. */
+        
+        /* Estilização da Scrollbar */
         main::-webkit-scrollbar {
             width: 8px;
         }
@@ -34,11 +34,9 @@
             background: #64748b; /* Cor ao passar o mouse por cima */
         }
 
-        /* 3. Animação do Texto na Barra Lateral (Sidebar) */
-        
-        /* Por padrão, o texto dos botões na sidebar fica escondido. */
-        /* 'opacity: 0' o torna invisível. */
-        /* 'width: 0' remove o espaço que ele ocuparia. */
+
+
+        /* Animação do Texto na Sidebar */
         .sidebar-button-text {
             opacity: 0;
             width: 0;
@@ -46,23 +44,19 @@
             white-space: nowrap; /* Impede que o texto quebre em várias linhas durante a animação */
         }
         
-        /* Quando a barra lateral (<aside>) recebe a classe 'expanded'... */
-        /* ...o texto dentro dela (.sidebar-button-text) se torna visível. */
-        /* 'opacity: 1' o torna totalmente visível. */
-        /* 'width: auto' faz com que ele ocupe o espaço necessário. */
+      
         aside.expanded .sidebar-button-text {
             opacity: 1;
             width: auto;
-            margin-left: 0.75rem; /* Equivalente a 'ml-3' do Tailwind, para dar um espaçamento. */
+            margin-left: 0.75rem; 
         }
+        
     </style>
 </head>
 <body class="bg-slate-900 text-slate-200">
 
     <div id="comparison-cart-container" class="fixed top-6 right-6 z-50">
-    <!-- Este container começa intencionalmente vazio. 
-         O JavaScript é o responsável por criar e inserir o botão do carrinho aqui dentro 
-         APENAS quando for necessário. -->
+    <!-- Div container para fazer a logica da comparação -->
     </div>
 
     <div class="flex h-screen">
@@ -129,25 +123,22 @@
             <div id="forms" class="mb-8"></div>
 
             <!-- Área de Saída de Dados -->
-            <!-- A classe min-h-[200px] foi removida daqui -->
             <div id="output" class="bg-slate-800 p-6 rounded-lg shadow-md">
                 <p class="text-slate-400">Bem-vindo! Selecione uma opção no menu para começar.</p>
-                <!-- O conteúdo (tabelas, gráficos, etc.) será inserido aqui -->
+                <!-- Div para o conteúdo  -->
             </div>
         </main>
     </div>
 
     <script>
-        // --- Lógica do Frontend para a Sidebar ---
+        // --- Lógica apenas para animação da Sidebar (não se encaixa na ui) ---
         const sidebar = document.getElementById('sidebar');
         const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
 
         // Função para alternar a visibilidade da sidebar
         function toggleSidebar() {
-            // Adiciona ou remove a classe 'expanded' da sidebar
             sidebar.classList.toggle('expanded');
             
-            // Altera a largura da sidebar com base na presença da classe 'expanded'
             if (sidebar.classList.contains('expanded')) {
                 sidebar.classList.remove('w-20'); // Largura recolhida
                 sidebar.classList.add('w-64');   // Largura expandida
@@ -156,23 +147,12 @@
                 sidebar.classList.add('w-20');
             }
         }
+
         toggleSidebarBtn.addEventListener('click', toggleSidebar);
 
-        // Opcional: Salvar o estado da sidebar no navegador do usuário
-        // Isso faz com que a página "lembre" se a sidebar estava aberta ou fechada
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('sidebarExpanded') === 'true') {
-                toggleSidebar();
-            }
-        });
-
-        // Salva o estado (aberto/fechado) sempre que a animação de transição terminar
-        sidebar.addEventListener('transitionend', () => {
-            localStorage.setItem('sidebarExpanded', sidebar.classList.contains('expanded'));
-        });
     </script>
     
-    <!-- Seus scripts de lógica da aplicação -->
+    <!-- Scripts de lógica da aplicação -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
     <script type="module" src="ui.js"></script> 
 
