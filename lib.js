@@ -41,14 +41,14 @@ const resetCountries = () => {
 // ========================
 
 
-const addCountry = (country, newCountry) => [...books, newBook];
+const addCountry = (countries, newCountry) => [...countries, newCountry];
 
 
-const updateCountry = (countries, id, updates) =>
-  countries.map(country => (country.id === id ? { ...country, ...updates } : country));
+const updateCountry = (countries, cca3, updates) =>
+  countries.map(country => (country.cca3 === cca3 ? { ...country, ...updates } : country));
 
 const deleteCountry = (countries, countryCca3) =>
-  countries.filter(country => country.countryCca3 !== countryCca3)
+  countries.filter(country => country.cca3 !== countryCca3);
 
 
 
@@ -98,31 +98,29 @@ const addToComparison = (countryCca3, countries) => {
 
 
 // Formata os dados de um único país para exibição, e funciona como uma peça central de controle
-function displayCountryDetails(country) {
+const displayCountryDetails = (country) => {
   output.innerHTML = `
     <div class="relative bg-slate-800 p-6 rounded-lg shadow-md transition-opacity duration-500">
-        
-    <!-- Botão de Editar (Canto Superior Esquerdo) -->
+
         <button 
             data-action="editCountry"
             data-cca3="${country.cca3}"
-            class="absolute top-6 left-6 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="absolute top-6 left-6 flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
             title="Editar País"
         >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-pen-line"><path d="m18 5-3-3H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2Z"/><path d="M8 18h1"/><path d="M18.4 9.6a2 2 0 1 1 3 3L17 17l-4 1 1-4Z"/></svg>
+            <span class="font-semibold">Editar</span>
         </button>
 
-        <!-- Botão de Deletar (Canto Superior Direito) -->
         <button 
             data-action="deleteCountry"
             data-cca3="${country.cca3}"
-            class="absolute top-6 right-6 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            class="absolute top-6 right-6 flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
             title="Deletar País"
         >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            <span class="font-semibold">Deletar</span>
         </button>
-
-        
         <!-- BANDEIRA EM ALTA RESOLUÇÃO -->
         <div class="mb-6">
             <img 

@@ -33,11 +33,176 @@ const comparisonCartContainer = document.getElementById('comparison-cart-contain
 // Forms
 // ========================
 
+function showAddCountryForm() {
+  output.innerHTML = ''; // Limpa a área de visualização
+  forms.innerHTML = `
+    <div class="bg-slate-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+      <h2 class="text-2xl font-bold text-white mb-6">Adicionar Novo País</h2>
+      <form id="addForm">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="nome_comum" class="block text-sm font-medium text-slate-300 mb-2">Nome Comum</label>
+            <input type="text" id="nome_comum" placeholder="Ex: Atlântida" required class="w-full bg-slate-700 text-white rounded-md px-3 py-2">
+          </div>
+          <div>
+            <label for="capital" class="block text-sm font-medium text-slate-300 mb-2">Capital</label>
+            <input type="text" id="capital" placeholder="Ex: Poseidonis" required class="w-full bg-slate-700 text-white rounded-md px-3 py-2">
+          </div>
+          <div>
+            <label for="populacao" class="block text-sm font-medium text-slate-300 mb-2">População</label>
+            <input type="number" id="populacao" placeholder="Ex: 100000" required class="w-full bg-slate-700 text-white rounded-md px-3 py-2">
+          </div>
+          <div>
+            <label for="area_km2" class="block text-sm font-medium text-slate-300 mb-2">Área (km²)</label>
+            <input type="number" id="area_km2" placeholder="Ex: 50000" required class="w-full bg-slate-700 text-white rounded-md px-3 py-2">
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-4">
+          <button type="button" id="cancelAdd" class="bg-slate-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-slate-500">
+            Cancelar
+          </button>
+          <button type="submit" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700">
+            Adicionar País
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  // Listener para o botão de cancelar
+  document.getElementById('cancelAdd').addEventListener('click', () => {
+    forms.innerHTML = '';
+    output.innerHTML = '<p>Criação de país cancelada.</p>';
+  });
+
+  // Listener para o envio do formulário
+  document.getElementById('addForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    const nomeComum = document.getElementById('nome_comum').value;
+    
+    // Gera abreviações simples baseadas no nome (suficiente para este app)
+    const cca3 = nomeComum.slice(0, 3).toUpperCase();
+
+    // Validação: Verifica se um país com a mesma abreviação já existe
+    if (countries.some(c => c.cca3 === cca3)) {
+      showCustomAlert(`Já existe um país com a abreviação '${cca3}'. Por favor, escolha um nome diferente.`);
+      return; // Interrompe a execução
+    }
+
+    const newCountry = {
+      nome_comum: nomeComum,
+      capital: document.getElementById('capital').value,
+      populacao: parseInt(document.getElementById('populacao').value, 10),
+      area_km2: parseInt(document.getElementById('area_km2').value, 10),
+      cca3: cca3,
+      cca2: 'us-al',
+      // Preenche outros dados com valores padrão para evitar erros
+      oficial_ptBr: `República de ${nomeComum}`,
+      regiao: 'N/D',
+      sub_regiao: 'N/D',
+      idioma_principal: 'N/D',
+      moeda_principal: 'N/D'
+    };
+
+    // Adiciona o novo país à lista principal e salva
+    countries = Paises.addCountry(countries, newCountry);
+    Paises.saveCountries(countries);
+
+    // Limpa o formulário e exibe o novo país
+    forms.innerHTML = '';
+    Paises.displayCountryDetails(newCountry);
+    showCustomAlert('País adicionado com sucesso!');
+  });
+}
+
+const showEditForm = (countryToEdit) => {
+  output.innerHTML = '';
+  
+  // Preenche a div 'forms' com o HTML do formulário
+  forms.innerHTML = `
+    <div class="bg-slate-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+      <h2 class="text-2xl font-bold text-white mb-6">Editando: ${countryToEdit.nome_comum}</h2>
+      <form id="editForm" data-cca3="${countryToEdit.cca3}">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="nome_comum" class="block text-sm font-medium text-slate-300 mb-2">Nome Comum</label>
+            <input type="text" id="nome_comum" value="${countryToEdit.nome_comum}" required class="w-full bg-slate-700 text-white rounded-md px-3 py-2">
+          </div>
+          <div>
+            <label for="capital" class="block text-sm font-medium text-slate-300 mb-2">Capital</label>
+            <input type="text" id="capital" value="${countryToEdit.capital}" required class="w-full bg-slate-700 text-white rounded-md px-3 py-2">
+          </div>
+          <div>
+            <label for="populacao" class="block text-sm font-medium text-slate-300 mb-2">População</label>
+            <input type="number" id="populacao" value="${countryToEdit.populacao}" required class="w-full bg-slate-700 text-white rounded-md px-3 py-2">
+          </div>
+          <div>
+            <label for="area_km2" class="block text-sm font-medium text-slate-300 mb-2">Área (km²)</label>
+            <input type="number" id="area_km2" value="${countryToEdit.area_km2}" required class="w-full bg-slate-700 text-white rounded-md px-3 py-2">
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-end gap-4">
+          <button type="button" id="cancelEdit" class="bg-slate-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-slate-500">
+            Cancelar
+          </button>
+          <button type="submit" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700">
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  // Listener para o botão CANCELAR
+  document.getElementById('cancelEdit').addEventListener('click', () => {
+    forms.innerHTML = ''; // Limpa o formulário
+    Paises.displayCountryDetails(countryToEdit); // Mostra os detalhes do país novamente
+  });
+
+  // Listener para a SUBMISSÃO do formulário
+  document.getElementById('editForm').addEventListener('submit', e => {
+    e.preventDefault();
+    
+    // Pega o código do país do atributo do formulário
+    const cca3 = e.target.dataset.cca3;
+    
+    // Cria um objeto com os dados atualizados do formulário
+    const updatedData = {
+      nome_comum: document.getElementById('nome_comum').value,
+      capital: document.getElementById('capital').value,
+      populacao: parseInt(document.getElementById('populacao').value, 10),
+      area_km2: parseInt(document.getElementById('area_km2').value, 10)
+    };
+
+    // Atualiza a lista de países
+    countries = Paises.updateCountry(countries, cca3, updatedData);
+    
+    // Salva os dados no localStorage
+    Paises.saveCountries(countries);
+    
+    // Limpa o formulário da tela
+    forms.innerHTML = '';
+    
+    // Encontra o país atualizado para exibir os detalhes
+    const updatedCountry = countries.find(c => c.cca3 === cca3);
+    if (updatedCountry) {
+      Paises.displayCountryDetails(updatedCountry);
+    }
+
+    alert('País atualizado com sucesso!');
+  });
+}
+
 
 
 // Formulário para buscar país 
 
-function showSearchForm() {
+const showSearchForm = () => {
   forms.innerHTML = `
     <div class="bg-slate-800 p-6 rounded-lg shadow-md max-w-lg mx-auto">
       <h2 class="text-xl font-semibold text-white mb-4">Buscar País</h2>
@@ -177,10 +342,6 @@ const displayComparisonView = () => {
                 <h3 class="text-xl font-bold text-white text-center mb-2">${country.nome_comum}</h3>
                 <p class="text-slate-400 text-center italic mb-4">${country.oficial_ptBr}</p>
                 <div class="space-y-2 mt-auto">
-                    <div class="flex justify-between items-center p-2 bg-slate-700/50 rounded-md">
-                        <span class="font-semibold text-slate-400">Capital:</span>
-                        <span class="text-slate-100">${country.capital}</span>
-                    </div>
                     <!-- Célula de População com cor condicional -->
                     <div class="flex justify-between items-center p-2 rounded-md ${popClass} transition-colors">
                         <span class="font-semibold">População:</span>
@@ -190,6 +351,23 @@ const displayComparisonView = () => {
                     <div class="flex justify-between items-center p-2 rounded-md ${areaClass} transition-colors">
                         <span class="font-semibold">Área (km²):</span>
                         <span class="font-bold">${(country.area_km2 || 0).toLocaleString('pt-BR')}</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-slate-700/50 rounded-md">
+                        <span class="font-semibold text-slate-400">Capital:</span>
+                        <span class="text-slate-100">${country.capital}</span>
+                    </div>
+                  
+                    <div class="flex justify-between items-center p-2 bg-slate-700/50 rounded-md">
+                        <span class="font-semibold text-slate-400">Região:</span>
+                        <span class="text-slate-100">${country.regiao}</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-slate-700/50 rounded-md">
+                        <span class="font-semibold text-slate-400">Moeda:</span>
+                        <span class="text-slate-100">${country.moeda_principal}</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-slate-700/50 rounded-md">
+                        <span class="font-semibold text-slate-400">Idioma:</span>
+                        <span class="text-slate-100">${country.idioma_principal}</span>
                     </div>
                 </div>
             </div>
@@ -212,7 +390,7 @@ const displayComparisonView = () => {
 // ========================
 
 
-function showChartForm() {
+const showChartForm = () => {
   // Limpa a área de output para garantir que não elementos indesejados
   output.innerHTML = '';
 
@@ -259,7 +437,7 @@ function showChartForm() {
       chartTitle = 'Top 10 Países Mais Populosos';
       datasetLabel = 'População';
     } else { 
-      top10 = Paises.getTop10by(countries)(area_km2); 
+      top10 = Paises.getTop10By(countries)('area_km2'); 
       chartTitle = 'Top 10 Maiores Países por Área';
       datasetLabel = 'Área (km²)';
     }
@@ -325,7 +503,7 @@ function showChartForm() {
 
 
 // Função que exibe a lista interativa
-function showCountriesList() {
+const showCountriesList = () => {
   // Renderiza a tabela na tela
   output.innerHTML = Paises.listCountriesAsTable(countries);
 
@@ -368,6 +546,7 @@ const actions = {
   },
   
   list: () => showCountriesList(),
+  addFictional: () => showAddCountryForm(),
   findByCapital: () => showSearchForm(),
   populationChart: () => showChartForm(),
   clear: () => {
@@ -387,7 +566,6 @@ const actions = {
 // Event listener
 // ========================
 
-
 // Botões padrões
 buttons.addEventListener('click', e => {
   if (e.target.tagName === 'BUTTON') {
@@ -399,7 +577,7 @@ buttons.addEventListener('click', e => {
 });
 
 
-// EventListener da função comparar
+
 document.addEventListener('click', (e) => {
     // Captura clique no botão "Selecionar para Comparar" 
     const compareButton = e.target.closest('[data-action="addCompare"]');
@@ -409,11 +587,35 @@ document.addEventListener('click', (e) => {
         updateComparisonCart();
         return; 
     }
-
-    // Captura clique no botão do "carrinho" para iniciar a comparação
     const cartButton = e.target.closest('#compare-now-btn');
     if (cartButton) {
         displayComparisonView(); // Mostra comparação
         updateComparisonCart(); // Limpa o localStorage
+        return; 
+    }
+
+    
+    const deleteButton = e.target.closest('[data-action="deleteCountry"]');
+    if (deleteButton) {
+        const cca3Cod = deleteButton.dataset.cca3;
+        if (confirm('Tem certeza que deseja deletar este país?')) {
+            countries = Paises.deleteCountry(countries, cca3Cod); 
+            Paises.saveCountries(countries);
+            // Exibe a mensagem de sucesso.
+            output.innerHTML = '<p class="text-green-400">País deletado com sucesso!</p>';
+            forms.innerHTML = ''; // Limpa qualquer formulário visível
+        }
+        return;
+    }
+
+    // --- EDITAR ---
+    const editButton = e.target.closest('[data-action="editCountry"]');
+    if (editButton) {
+        const cca3 = editButton.dataset.cca3;
+        const countryToEdit = countries.find(c => c.cca3 === cca3);
+        if (countryToEdit) {
+            showEditForm(countryToEdit); // Chama a função que cria o formulário
+        }
+        return;
     }
 });
