@@ -1,4 +1,3 @@
-
 import { sourceCountries } from './bancoDados.js'; // Importa o objeto sourceCountries que contem todos paises, para organizar
 
 const STORAGE_KEY = "paises::data"; // Chave usada no localStorage para salvar os dados dos países
@@ -271,4 +270,3 @@ export const Paises = {
   clearComparison,
   addToComparison,
 };
-
