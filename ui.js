@@ -1,5 +1,4 @@
-// Importa o módulo principal que contém as funções de manipulação dos países
-import { Paises } from './lib.js';
+
 
 
 
@@ -659,3 +658,4 @@ document.addEventListener('click', (e) => {
         return;
     }
 });
+
