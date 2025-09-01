@@ -1,4 +1,7 @@
 
+import { sourceCountries } from './bancoDados.js'; // Importa o objeto sourceCountries que contem todos paises, para organizar
+
+
 import { sourceCountries } from './bancoDados.js'; // Importa o objeto sourceCountries que contem todos paises
 
 const STORAGE_KEY = "paises::data"; // Chave usada no localStorage para salvar os dados dos países
