@@ -1,2 +1,2 @@
-# Crud-Paises
-Site com crud de países para a matéria de Programação Funcional
+# GeoArray 
+Este é um projeto acadêmico desenvolvido por calouros de Ciências da Computação (2025.1) da Universidade Federal de Sergipe (UFS), na matéria de Programação Funcional, ministrada pelo professor Hendrik Macedo. O objetivo foi aplicar na prática os conceitos do paradigma funcional estudado em JavaScript, culminando no desenvolvimento de um CRUD (Create, Read, Update, Delete) com uma interface web simples e interativa.
