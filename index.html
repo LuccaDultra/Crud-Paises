@@ -1,154 +1,205 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD Países</title>
 
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Usamos o tailwind como ferramenta para facilitar o CSS -->
-
-    <!-- Também usamos vetores svg para os icones e simbolos do site -->
-
+    
     <style>
-
-        /* Configuração da Fonte Padrão */
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        /* Animação da seta "pulsando" para baixo */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
         }
-        
-        
+        .animate-bounce-slow {
+            animation: bounce 2s infinite;
+        }
+
         /* Estilização da Scrollbar */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #0f172a; /* slate-900 */
+        }
+        body::-webkit-scrollbar-thumb {
+            background: #475569; /* slate-600 */
+            border-radius: 10px;
+        }
         main::-webkit-scrollbar {
             width: 8px;
         }
         main::-webkit-scrollbar-track {
-            background: #1e293b; /* Cor de fundo da barra de rolagem (cinza escuro) */
+            background: #1e293b; 
         }
         main::-webkit-scrollbar-thumb {
-            background: #475569; /* Cor do 'polegar' da barra de rolagem (cinza médio) */
+            background: #475569;
             border-radius: 10px;
         }
-        main::-webkit-scrollbar-thumb:hover {
-            background: #64748b; /* Cor ao passar o mouse por cima */
-        }
-
-
 
         /* Animação do Texto na Sidebar */
         .sidebar-button-text {
             opacity: 0;
             width: 0;
-            transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out; /* Animação suave */
-            white-space: nowrap; /* Impede que o texto quebre em várias linhas durante a animação */
+            transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out;
+            white-space: nowrap;
         }
-        
-      
         aside.expanded .sidebar-button-text {
             opacity: 1;
             width: auto;
             margin-left: 0.75rem; 
         }
-        
     </style>
 </head>
 <body class="bg-slate-900 text-slate-200">
 
-    <div id="comparison-cart-container" class="fixed top-6 right-6 z-50">
-    <!-- Div container para fazer a logica da comparação -->
+
+    <div id="homepage-view">
+        
+        <section class="min-h-screen flex flex-col items-center justify-center text-center p-4 relative">
+            <header class="mb-8">
+                <h1 class="text-5xl md:text-6xl font-bold text-white mb-3">🌍 GeoArray 👨🏻‍💻</h1>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">Um projeto interativo para explorar, comparar e gerenciar informações de nações ao redor do mundo.</p>
+            </header>
+            <main>
+                <button id="enter-dashboard-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-700 transition-transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500/50">
+                    Acessar o Painel
+                </button>
+            </main>
+            <a href="#about-project" class="absolute bottom-10 left-1/2 -translate-x-1/2 cursor-pointer">
+                <div class="flex flex-col items-center text-slate-400 hover:text-white transition-colors">
+                    <span>Saiba Mais</span>
+                    <svg class="w-8 h-8 mt-1 animate-bounce-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </a>
+        </section>
+
+        
+        <section id="about-project" class="min-h-screen bg-slate-800 py-20 px-4 flex items-center justify-center">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl font-bold text-white mb-8">Sobre o Projeto</h2>
+                <p class="text-slate-300 text-lg mb-12 leading-relaxed max-w-3xl mx-auto">
+                    Este é um projeto acadêmico desenvolvido por calouros de <strong>Ciências da Computação (2025.1)</strong> da Universidade Federal de Sergipe (UFS), na matéria de Programação Funcional, ministrada pelo professor Hendrik Macedo. O objetivo foi aplicar na prática os conceitos do paradigma funcional estudado em JavaScript, culminando no desenvolvimento de um CRUD (Create, Read, Update, Delete) com uma interface web simples e interativa.
+                </p>
+                
+                <div class="w-full space-y-16 flex flex-col items-center">
+                    <!-- Seção do Vídeo -->
+                    <div class="w-full max-w-3xl">
+                        <h3 class="text-2xl font-semibold text-white mb-4">Vídeo de Apresentação</h3>
+                        <div class="aspect-video rounded-lg overflow-hidden shadow-lg border-2 border-slate-700">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/OtznOZE6-ns" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+            
+                    <!-- Seção do Repositório -->
+                    <div class="w-full">
+                        <h3 class="text-2xl font-semibold text-white mb-4">Código Fonte</h3>
+                        <p class="text-slate-400 mb-4">O código completo está disponível no GitHub. Sinta-se à vontade para explorar!</p>
+                        <a href="https://github.com/LuccaDultra/Crud-Paises" target="_blank" class="inline-block bg-slate-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-slate-600 transition-colors">
+                            Ver Repositório
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Rodapé da Homepage -->
+        <footer class="bg-slate-900 text-center py-4">
+            <p class="text-slate-500 text-sm">Desenvolvido por Lucca Dultra", Isaias, Gabriel e Rebeca © 2025</p>
+        </footer>
     </div>
 
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="bg-slate-800 text-white p-4 transition-all duration-300 ease-in-out w-20 flex flex-col">
-            <div>
-                <!-- Botão de Toggle -->
-                <div class="flex justify-center mb-6">
-                     <button id="toggleSidebarBtn" class="p-2 rounded-lg hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-                    </button>
-                </div>
 
-                <!-- Menu de Navegação -->
-                <nav id="buttons" class="flex flex-col space-y-2">
-                    <button data-action="init" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-cloud flex-shrink-0 pointer-events-none"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Carregar Dados</span>
-                    </button>
-                    <button data-action="list" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list flex-shrink-0 pointer-events-none"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Listar Países</span>
-                    </button>
-                    <button data-action="addFictional" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-square flex-shrink-0 pointer-events-none"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Adicionar País</span>
-                    </button>
-                     <button data-action="findByCapital" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search flex-shrink-0 pointer-events-none"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Buscar</span>
-                    </button>
-                    <button data-action="populationChart" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 flex-shrink-0 pointer-events-none"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Gráfico</span>
-                    </button>
-                    <button data-action="clear" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eraser flex-shrink-0 pointer-events-none"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21H7Z"/><path d="M22 21H7"/><path d="m5 12 5 5"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Limpar Dados</span>
-                    </button>
-                    <button data-action="exit" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out flex-shrink-0 pointer-events-none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                        <span class="sidebar-button-text pointer-events-none">Sair</span>
-                    </button>
-                </nav>
+    
+    <div id="dashboard-view" class="hidden">
+        <div id="comparison-cart-container" class="fixed top-6 right-6 z-50"></div>
+        <div class="flex h-screen flex-col">
+            <div class="flex flex-1 overflow-hidden">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="bg-slate-800 text-white p-4 transition-all duration-300 ease-in-out w-20 flex flex-col">
+                     <div>
+                        <div class="flex justify-center mb-6">
+                             <button id="toggleSidebarBtn" class="p-2 rounded-lg hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <nav id="buttons" class="flex flex-col space-y-2">
+                             <button data-action="init" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-cloud flex-shrink-0 pointer-events-none"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></svg>
+                                <span class="sidebar-button-text pointer-events-none">Carregar Dados</span>
+                            </button>
+                            <button data-action="list" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list flex-shrink-0 pointer-events-none"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+                                <span class="sidebar-button-text pointer-events-none">Listar Países</span>
+                            </button>
+                            <button data-action="addFictional" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-square flex-shrink-0 pointer-events-none"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                                <span class="sidebar-button-text pointer-events-none">Adicionar País</span>
+                            </button>
+                            <button data-action="findByCapital" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search flex-shrink-0 pointer-events-none"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <span class="sidebar-button-text pointer-events-none">Buscar</span>
+                            </button>
+                            <button data-action="populationChart" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 flex-shrink-0 pointer-events-none"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+                                <span class="sidebar-button-text pointer-events-none">Gráfico</span>
+                            </button>
+                            <button data-action="clear" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eraser flex-shrink-0 pointer-events-none"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21H7Z"/><path d="M22 21H7"/><path d="m5 12 5 5"/></svg>
+                                <span class="sidebar-button-text pointer-events-none">Limpar Dados</span>
+                            </button>
+                            <button data-action="exit" class="flex items-center p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home flex-shrink-0 pointer-events-none"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                <span class="sidebar-button-text pointer-events-none">Voltar à Home</span>
+                            </button>
+                        </nav>
+                    </div>
+                </aside>
+                <!-- Conteúdo Principal -->
+                <main class="flex-1 p-6 md:p-8 overflow-y-auto">
+                    <header class="mb-8">
+                        <h1 class="text-3xl font-bold text-white">Dashboard GeoArray 🖥️</h1>
+                        <p class="text-slate-400 mt-3">Utilize o menu lateral para navegar pelas funcionalidades.</p>
+                    </header>
+                    <div id="forms" class="mb-8"></div>
+                    <div id="output" class="bg-slate-800 p-6 rounded-lg shadow-md">
+                        <p class="text-slate-400">Bem-vindo! Selecione uma opção no menu para começar.</p>
+                    </div>
+                </main>
             </div>
-        </aside>
-
-        <!-- Conteúdo Principal -->
-        <main class="flex-1 p-6 md:p-8 overflow-y-auto">
-            <header class="mb-8">
-                <h1 class="text-3xl font-bold text-white">🌍 Painel de Informações de Países</h1>
-                <p class="text-slate-400 mt-3">Utilize o menu lateral para navegar pelas funcionalidades.</p>
-            </header>
-            
-            <!-- Área de Formulários Dinâmicos -->
-            <div id="forms" class="mb-8"></div>
-
-            <!-- Área de Saída de Dados -->
-            <div id="output" class="bg-slate-800 p-6 rounded-lg shadow-md">
-                <p class="text-slate-400">Bem-vindo! Selecione uma opção no menu para começar.</p>
-                <!-- Div para o conteúdo  -->
-            </div>
-        </main>
+            <!-- Rodapé do Painel -->
+            <footer class="bg-slate-800 text-center py-2 border-t border-slate-700">
+                <p class="text-slate-500 text-sm">Desenvolvido por Lucca Dultra, Isaias, Gabriel e Rebeca © 2025</p>
+            </footer>
+        </div>
     </div>
 
     <script>
-        // --- Lógica apenas para animação da Sidebar (não se encaixa na ui) ---
+        // Lógica da Sidebar
         const sidebar = document.getElementById('sidebar');
         const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
-
-        // Função para alternar a visibilidade da sidebar
-        function toggleSidebar() {
-            sidebar.classList.toggle('expanded');
-            
-            if (sidebar.classList.contains('expanded')) {
-                sidebar.classList.remove('w-20'); // Largura recolhida
-                sidebar.classList.add('w-64');   // Largura expandida
-            } else {
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20');
-            }
+        if (toggleSidebarBtn) {
+            toggleSidebarBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('expanded');
+                sidebar.classList.toggle('w-20');
+                sidebar.classList.toggle('w-64');
+            });
         }
-
-        toggleSidebarBtn.addEventListener('click', toggleSidebar);
-
     </script>
     
-    <!-- Scripts de lógica da aplicação -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
     <script type="module" src="ui.js"></script> 
 
 </body>
 </html>
-
-

@@ -22,6 +22,30 @@ if (countries.length === 0) {
 // ========================
 
 
+const homepageView = document.getElementById('homepage-view');
+const dashboardView = document.getElementById('dashboard-view');
+const enterDashboardBtn = document.getElementById('enter-dashboard-btn');
+
+
+enterDashboardBtn.addEventListener('click', () => {
+    // Adiciona classes para uma transição suave de fade-out
+    homepageView.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+    
+    // Espera a animação de fade-out terminar
+    setTimeout(() => {
+        homepageView.classList.add('hidden');
+        dashboardView.classList.remove('hidden');
+        
+        // Adiciona uma animação de fade-in para o dashboard
+        dashboardView.classList.add('opacity-0');
+        setTimeout(() => {
+             dashboardView.classList.remove('opacity-0');
+             dashboardView.classList.add('opacity-100', 'transition-opacity', 'duration-500');
+        }, 50);
+
+    }, 500);
+});
+
 const output = document.getElementById('output');
 const forms = document.getElementById('forms');
 const buttons = document.getElementById('buttons');
@@ -33,7 +57,7 @@ const comparisonCartContainer = document.getElementById('comparison-cart-contain
 // Forms
 // ========================
 
-function showAddCountryForm() {
+const showAddCountryForm = () => {
   output.innerHTML = ''; // Limpa a área de visualização
   forms.innerHTML = `
     <div class="bg-slate-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
@@ -556,8 +580,24 @@ const actions = {
     output.innerHTML = '<p>Dados limpos.</p>';
   },
   exit: () => {
-    forms.innerHTML = '';
-    output.innerHTML = '<p>Até logo! :)</p>';
+    // 1. Inicia a animação de fade-out do dashboard
+    dashboardView.classList.remove('opacity-100');
+    dashboardView.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+
+    // 2. Após a animação, esconde o dashboard e mostra a home
+    setTimeout(() => {
+      dashboardView.classList.add('hidden');
+      homepageView.classList.remove('hidden');
+      
+      // 3. Inicia a animação de fade-in da homepage
+      homepageView.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+      
+      setTimeout(() => {
+        homepageView.classList.remove('opacity-0');
+        homepageView.classList.add('opacity-100');
+      }, 20); // Pequeno delay para o navegador processar a mudança
+
+    }, 500); // Tempo da animação de saída
   }
 };
 
